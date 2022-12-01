@@ -6,7 +6,7 @@ namespace ETicaretAPI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase //API yapılarında controllar genel bi kanı olarak çoğul isim alır
+    public class ProductsController : ControllerBase //API yapılarında controllar genel bi kanı olarak çoğul isim alır.
     {
         private readonly IProductService _productService; // ben IProductService çağırdığımda Application katmanından çağırdı bunu yapma sebebi : biz Dependency enjection ile IProductService IOC Container'a atmıştık ve : Persistence katmanını API Katmanından referans almıştık. Persistence katmanıda Application katmanını referans aldığından biz dolaylı yoldan IProductService erişebiliyoruz Application katmanıdaki.
 
