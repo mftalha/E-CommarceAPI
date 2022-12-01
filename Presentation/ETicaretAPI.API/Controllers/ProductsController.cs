@@ -18,7 +18,7 @@ namespace ETicaretAPI.API.Controllers
         public IActionResult GetProducts()
         {
              var products = _productService.GetProducts(); //Persistence katmanındaki tüm verileri döndüren methodu çağırıyoruz : tüm verileri apı katmanına çekmiş olduk şuan.
-            return Ok(products); //debugda çalıştırken gördümki  producttaki entityler domainden çekiliyor : mimarinin amacıda bu zaten.
+            return Ok(products); //debugda çalıştırken gördümki  producttaki entityler domainden çekiliyor :mimarinin amacıda bu zaten.
         }
     }
 }
