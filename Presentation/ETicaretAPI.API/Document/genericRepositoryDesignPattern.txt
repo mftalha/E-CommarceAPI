@@ -1,0 +1,22 @@
+	veri eriþim modeli tasarýmý : Repository Design Pattern
+	
+	- Gencay Yýldýz 'ýn anlatýmýna göre : 
+	- Bir projede birden fazla veritabaný kullanacaksak : bu modeli kullanarak her veritabaný için crud larý tekrar yazmamýza gerek kalmýyormuþ.
+	- Ýnternette benzer þeyler yazýyor.
+	= farklý veritabanlarýnýn kullanýmýný tek bir arayüzde toplayýp hepsini ayný arayüzden  tetikleme iþlemi.
+	
+Not : bu yapýnýn kullanýýmýna çok fazla eleþtiride varmýþ. == solid prensiplere aykýrý olduðu için.
+
+
+
+Not : bir projede tek bir veritabaný kullanýlýyor ise bu yapý kullanmak mantýklý deðilmiþ. : ORM yeterliymiþ tek veritbanlý projelerde.
+
+---------------- Projede kullanýmýmýz.
+-ETicaretAPI.Application katmanýnda Repositories klasörünü oluþturduk : burada interface ler tanýmlanacak : 
+-ETicaretAPI.Persistence katmanýnda Repositories klasörünü oluþturduk : buradada cancurateler tanýmlanacak.
+
+Not : veritabanýndan veri çekme iþlemleri ile veri güncelle , sil , update gibi kavramlarýn ayrýlmasý gerekiyormuþ : doðrusu böyle.
+= Bu yüzden ETicaretAPI.Application katmanýndaki Repositories klasöründe IReadRepository.cs interfacesi'ni oluþturduk: burda sadece veritabanýndan okuma iþlemleri gerçekleþtirilecek.
+= ETicaretAPI.Application katmanýndaki Repositories klasöründe IWriteRepository.cs interfacesi'ni oluþturduk: buradada veritabanýna ekleme , güncelleme , silme gibi iþlemler yapýlacak.
+= ETicaretAPI.Application katmanýndaki Repositories klasöründe IRepository.cs interfacesi'nden ise bütün veritabnlarý için ortak kullanýlacak property , method gibi þeyler tanýmlanýr.
+
