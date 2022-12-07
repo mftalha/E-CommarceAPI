@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ETicaretAPI.Application.Repositories;
+using ETicaretAPI.Persistence.Repositories;
 
 namespace ETicaretAPI.Persistence
 {
@@ -14,7 +16,7 @@ namespace ETicaretAPI.Persistence
         public static void AddPersistenceService(this IServiceCollection services) //API katmanımda program.cs içinde depending enjection ile ben bu methodu IOC Container'a ekledim o yüzden buraya ne eklersem IOC Containara eklenmiş olacak.
         {
             //burada yaptığımız şey oluşturduğumuz dbcontext'i uygulayacağımız veritabanı bağlantısını yapıyoruz. biz postgresql kullanıyoruz bu projede o yüzden. - persistence katmanına sağ tıklayıp Manage Nuget Package ye tıklıyorum. -Browser kısmına tıklayıp Npgsql.EntityFrameworkCore.PostgreSql i aratıyorum ve indiriyorum projeye - options.UseNpgsql görülmesi için sayfsaya : using Microsoft.EntityFrameworkCore; ekliyorum üste artık options.UseNpgsql gözükecektir zaten options.Use yazdığımda devamında tıklıyorum ve içine connection stringi giriyorum.
-            services.AddDbContext<ETicaretAPIDbContext>(options => options.UseNpgsql(Configuration.ConnectionString));
+            services.AddDbContext<ETicaretAPIDbContext>(options => options.UseNpgsql(Configuration.ConnectionString),ServiceLifetime.Singleton); // default olarak scope oluşuyordu gelen hatadan dolayı ;; ServiceLifetime.Singleton a çevirdik.
 
             //magrationların oluşturulması : -ilk olarak Package Manager Consolu açıyoruz. -Default Procekte magrationlar nerede oluşturulmasını istiyorsak onu seçiyoruz : biz veritabanı işlemi olduğu için Persistence katmanını seçiyoruz. - add-migration mig_1 yazıyoruz (mig_1 ismini verme sebebimiz farklı migration set işlemleride yapacaz yerine göre silmemiz gerekecek : o yüzden bi düzen olması için biz öyle isimlendiriyoruz.) entera basıyoruz
 
@@ -26,6 +28,16 @@ namespace ETicaretAPI.Persistence
 
             // oluşturduğum migration doğrultusunda veritabanında tablolarımı oluşturmak için package manager consol'da update-database yazıyorum ; eğerki cmd veya powershell üzerinden yapmak istersekde persistence katman yolunda : dotnet ef database update diyoruz. : bu komut sonrası migrationlardaki tabloları veritabanına gönderecektir.
 
+            //bunları toplu eklemek için bir yöntem varmış kullanılabilir.
+            services.AddSingleton<ICustomerReadRepository, CustomerReadRepository>(); //scope = bir request esnasında herhangi bir nesnenin bir örneğini oluşturur ondan döndürür = her yeni bir requestte yeni bir nesne döndürecektir.
+            services.AddSingleton<ICustomerWriteRepository, CustomerWriteRepository>();
+            services.AddSingleton<IOrderReadRepository, OrderReadRepository>(); //repostitoryleri tekil ekleme sağlıyoruz böylece
+            services.AddSingleton<IOrderWriteRepository, OrderWriteRepository>();
+            services.AddSingleton<IProductReadRepository, ProductReadRepository>();
+            services.AddSingleton<IProductWriteRepository, ProductWriteRepository>();
+
+
+            //context nesnesini default olarak ServiceLefetime.Scope eklediğinden Repostory servislerini aynı yaşam döngüsünde eklememizin yararı olurmuş. = ondan AddScoped da ekliyoruz.
         }
     }
 }
