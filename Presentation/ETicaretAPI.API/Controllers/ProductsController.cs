@@ -27,7 +27,7 @@ namespace ETicaretAPI.API.Controllers
             //});
             //var count = await _productWriteRepository.SaveAsync();
 
-           Product p = await _productReadRepository.GetByIdAsync("dba02bd2-54a5-49e2-993e-3c87a0e765bb",false); //tracking ile ilgili hiçbir data vermez isem tracking true olacak. == yani takip edecek tracking , false verirsem trackingi takip etmiyecek.
+           Product p = await _productReadRepository.GetByIdAsync("dba02bd2-54a5-49e2-993e-3c87a0e765bb",false); //tracking ile ilgili hiçbir data vermez isem tracking true olacak. == yani takip edecek tracking , false verirsem trackingi takip etmiyecek böylece apide çalıştırdığımda status 200 başarılı sonucu alsamda veritabanında fiziksel bi değişim olmıyacaktır.
             p.Name = "Mehmet";
             _productWriteRepository.SaveAsync(); // _productReadRepository ile okuduğum veriyi nasıl _productWriteRepository ile yazdırıyorum = depending enjectionda aynı scope kullanıyorlar = bu yüzden _productReadRepository'i kullandığı dbcontext ne ise bunu talep eden _productWriteRepository'de aynı instance'yi elde edecektir. o yüzden biz datayı elde ettiğimiz dbcontext üzerinden SaveAsync() fonksiyonunu çağırmış olacaz.
             // yapılan değişikliği kaydediyoruz veritabanına.
