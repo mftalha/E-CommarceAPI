@@ -21,14 +21,38 @@ namespace ETicaretAPI.Persistence.Repositories
 
         public DbSet<T> Table => _context.Set<T>(); // biz tablo olarak bi T generic = entitie vermemiz lazım = customer , product diye belirli bir entities vermek istmeiyoruz : genel yapı laızm = bu yüzden Entitiy framwork core da == Set<entity>() yapısı var bizde bunu kullanıyoruz : bizim entity'imizde = T
         //Repostiyorden geldi bu evrensel
-        public IQueryable<T> GetAll() => Table; //veritabanında T ye uygun ne kadar veri varsa getir. (IQueryable = veritabanından filtreliyerek veri getirmek içindi.)
+        public IQueryable<T> GetAll(bool tracking = true)  //veritabanında T ye uygun ne kadar veri varsa getir. (IQueryable = veritabanından filtreliyerek veri getirmek içindi.)
+        {
+            var query = Table.AsQueryable();
+            if (!tracking)  //tracking false ise == EF Core tracking'i durduruyorum projede optimizasyon yapmak için == veri okuma işlemi yaptığım için bu sayfada gerek yok EF Core tracking'e ;; default olarak true geliyor çağrırken değiştirmediğimiz sürece = o yüzden default olarak takip ediyor.
+               query = query.AsNoTracking();
+            return query;
+        }
 
-        public IQueryable<T> getWhere(Expression<Func<T, bool>> method) 
-            => Table.Where(method); // şarta uygun verileri getir.
-        public async Task<T> GetSingleAsync(Expression<Func<T, bool>> method)
-            => await Table.FirstOrDefaultAsync(method); //tek bir veri döndürmek için. == asenkron olduğu için await async mantıklarını uyguluyoruz.
-        public async Task<T> GetByIdAsync(string id)
-            //=> Table.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id)); // where T :class yerine where T :BaseEntity çevirme mantığını bu method için yaptık. id ye erişim için. Guid.Parse(id) ; id yi guid id ye çevirme.
-            => await Table.FindAsync(Guid.Parse(id)); // yukarıdaki yönteme ek olarak FindAsync kullanılabilir : daha kolay.
+        public IQueryable<T> getWhere(Expression<Func<T, bool>> method, bool tracking = true)
+        // şarta uygun verileri getir.
+        {
+            var query = Table.Where(method);
+            if (!tracking)
+                query = query.AsNoTracking();
+            return query;
+        }
+        public async Task<T> GetSingleAsync(Expression<Func<T, bool>> method, bool tracking = true)
+        //tek bir veri döndürmek için. == asenkron olduğu için await async mantıklarını uyguluyoruz.
+        {
+            var query = Table.AsQueryable();
+            if (!tracking)
+                query = Table.AsNoTracking();
+            return await query.FirstOrDefaultAsync(method);
+        }
+        public async Task<T> GetByIdAsync(string id, bool tracking = true)
+        //=> Table.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id)); // where T :class yerine where T :BaseEntity çevirme mantığını bu method için yaptık. id ye erişim için. Guid.Parse(id) ; id yi guid id ye çevirme.
+        //=> await Table.FindAsync(Guid.Parse(id)); // yukarıdaki yönteme ek olarak FindAsync kullanılabilir : daha kolay.
+        {
+            var query = Table.AsQueryable();
+            if(!tracking) 
+                query = Table.AsNoTracking();
+            return await query.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id));//query üzerinden çalışırken FindAsync ulaşamadım ondan Mark/işaretleyici yöntemi ile id ye erişim sağlıyacam
+        }
     }
 }
