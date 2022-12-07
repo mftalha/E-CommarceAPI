@@ -38,6 +38,7 @@ namespace ETicaretAPI.Persistence
             services.AddScoped<IProductReadRepository, ProductReadRepository>();
             services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
 
+
             //context nesnesini default olarak ServiceLefetime.Scope eklediğinden Repostory servislerini aynı yaşam döngüsünde eklememizin yararı olurmuş. = ondan AddScoped da ekliyoruz.
         }
     }
