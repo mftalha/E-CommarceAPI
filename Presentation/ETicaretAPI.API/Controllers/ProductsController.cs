@@ -19,13 +19,18 @@ namespace ETicaretAPI.API.Controllers
         [HttpGet]
         public async Task Get()  // async void Get() == task kullanma sebebimiz == asennkron çalışmada işlem bittikten sonra diğer işteme geçmesi için : biz burda Task kullanmadığımız için : AddRangeAsync methodu bitmeden  SaveAsync geçtiğinden AddRangeAsync requestinin dependingi bitmeden yok edildiği için hata alıyorduk. services.AddSingleton da hata almamamızın nedeni ise AddRangeAsync den SaveAsync geçerken == AddRangeAsync tamamlamasa bile dispose/imha yapmadığından hata almıyorduk. == çünkü depending services.AddSingleton'da uygulamay mahsuz o nesneler 1 defa kalacak bidaha dispose edilmeyecek : dispose edilmediğinden hatayı engelliyordu.  == ama doğru olan çalışma şekli AddScope ile devam etmek
         {
-            await _productWriteRepository.AddRangeAsync(new()
-            {
-                new() { Id = Guid.NewGuid(), Name = "Product 1", Price = 100, CreateDate = DateTime.UtcNow ,Stock=10},
-                new() { Id = Guid.NewGuid(), Name = "Product 2", Price = 200, CreateDate = DateTime.UtcNow ,Stock=20},
-                new() { Id = Guid.NewGuid(), Name = "Product 3", Price = 300, CreateDate = DateTime.UtcNow ,Stock=130},
-            });
-            var count = await _productWriteRepository.SaveAsync();
+            //await _productWriteRepository.AddRangeAsync(new()
+            //{
+               // new() { Id = Guid.NewGuid(), Name = "Product 1", Price = 100, CreateDate = DateTime.UtcNow ,Stock=10},
+               // new() { Id = Guid.NewGuid(), Name = "Product 2", Price = 200, CreateDate = DateTime.UtcNow ,Stock=20},
+               // new() { Id = Guid.NewGuid(), Name = "Product 3", Price = 300, CreateDate = DateTime.UtcNow ,Stock=130},
+            //});
+            //var count = await _productWriteRepository.SaveAsync();
+
+           Product p = await _productReadRepository.GetByIdAsync("dba02bd2-54a5-49e2-993e-3c87a0e765bb",false); //tracking ile ilgili hiçbir data vermez isem tracking true olacak. == yani takip edecek tracking , false verirsem trackingi takip etmiyecek böylece apide çalıştırdığımda status 200 başarılı sonucu alsamda veritabanında fiziksel bi değişim olmıyacaktır.
+            p.Name = "Mehmet";
+            _productWriteRepository.SaveAsync(); // _productReadRepository ile okuduğum veriyi nasıl _productWriteRepository ile yazdırıyorum = depending enjectionda aynı scope kullanıyorlar = bu yüzden _productReadRepository'i kullandığı dbcontext ne ise bunu talep eden _productWriteRepository'de aynı instance'yi elde edecektir. o yüzden biz datayı elde ettiğimiz dbcontext üzerinden SaveAsync() fonksiyonunu çağırmış olacaz.
+            // yapılan değişikliği kaydediyoruz veritabanına.
         }
 
         [HttpGet("{id}")]
