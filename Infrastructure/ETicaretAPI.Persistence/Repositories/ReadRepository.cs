@@ -27,7 +27,8 @@ namespace ETicaretAPI.Persistence.Repositories
             => Table.Where(method); // şarta uygun verileri getir.
         public async Task<T> GetSingleAsync(Expression<Func<T, bool>> method)
             => await Table.FirstOrDefaultAsync(method); //tek bir veri döndürmek için. == asenkron olduğu için await async mantıklarını uyguluyoruz.
-        public Task<T> GetByIdAsync(string id)
-            => Table.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id)); // where T :class yerine where T :BaseEntity çevirme mantığını bu method için yaptık. id ye erişim için. Guid.Parse(id) ; id yi guid id ye çevirme.
+        public async Task<T> GetByIdAsync(string id)
+            //=> Table.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id)); // where T :class yerine where T :BaseEntity çevirme mantığını bu method için yaptık. id ye erişim için. Guid.Parse(id) ; id yi guid id ye çevirme.
+            => await Table.FindAsync(Guid.Parse(id)); // yukarıdaki yönteme ek olarak FindAsync kullanılabilir : daha kolay.
     }
 }
