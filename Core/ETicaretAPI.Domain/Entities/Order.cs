@@ -9,7 +9,7 @@ namespace ETicaretAPI.Domain.Entities
 {
     public class Order : BaseEntity
     {
-        public int CustomerId { get; set; } // entity framwork yapısal olarak : customer burda tekil olduğu için 1- n de : 1 kısmı olduğu için ona Id atıyacak veritabanı alanında otomatik. biz burda eğer bu isimle bunu vermesek zaten kendi veritabanı kısmında yine oluşturur ama biz veritabanındaki değere karşılık bu gelsin diye belirtmek için kendimiz oluşturuyoruz. ismi farklı yapabiliriz. ama o zaman belirmemiz gerekiyormus : belli şekillerde.
+        public Guid CustomerId { get; set; } // entity framwork yapısal olarak : customer burda tekil olduğu için 1- n de : 1 kısmı olduğu için ona Id atıyacak veritabanı alanında otomatik. biz burda eğer bu isimle bunu vermesek zaten kendi veritabanı kısmında yine oluşturur ama biz veritabanındaki değere karşılık bu gelsin diye belirtmek için kendimiz oluşturuyoruz. ismi farklı yapabiliriz. ama o zaman belirmemiz gerekiyormus : belli şekillerde.
         public string Description { get; set; }
         public string Address { get; set; }
 

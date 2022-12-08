@@ -52,7 +52,7 @@ namespace ETicaretAPI.Persistence.Repositories
             var query = Table.AsQueryable();
             if(!tracking) 
                 query = Table.AsNoTracking();
-            return await query.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id));//query üzerinden çalışırken FindAsync ulaşamadım ondan Mark/işaretleyici yöntemi ile id ye erişim sağlıyacam
+            return await query.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id)); //query üzerinden çalışırken FindAsync ulaşamadım ondan Mark/işaretleyici yöntemi ile id ye erişim sağlıyacam
         }
     }
 }
