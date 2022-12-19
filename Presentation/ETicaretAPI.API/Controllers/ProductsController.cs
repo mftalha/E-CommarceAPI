@@ -32,7 +32,7 @@ namespace ETicaretAPI.API.Controllers
         }
 
         [HttpGet]
-        public async Task Get()  // async void Get() == task kullanma sebebimiz == asennkron çalışmada işlem bittikten sonra diğer işteme geçmesi için : biz burda Task kullanmadığımız için : AddRangeAsync methodu bitmeden  SaveAsync geçtiğinden AddRangeAsync requestinin dependingi bitmeden yok edildiği için hata alıyorduk. services.AddSingleton da hata almamamızın nedeni ise AddRangeAsync den SaveAsync geçerken == AddRangeAsync tamamlamasa bile dispose/imha yapmadığından hata almıyorduk. == çünkü depending services.AddSingleton'da uygulamay mahsuz o nesneler 1 defa kalacak bidaha dispose edilmeyecek : dispose edilmediğinden hatayı engelliyordu.  == ama doğru olan çalışma şekli AddScope ile devam etmek
+        public async Task<IActionResult> Get()  // async void Get() == task kullanma sebebimiz == asennkron çalışmada işlem bittikten sonra diğer işteme geçmesi için : biz burda Task kullanmadığımız için : AddRangeAsync methodu bitmeden  SaveAsync geçtiğinden AddRangeAsync requestinin dependingi bitmeden yok edildiği için hata alıyorduk. services.AddSingleton da hata almamamızın nedeni ise AddRangeAsync den SaveAsync geçerken == AddRangeAsync tamamlamasa bile dispose/imha yapmadığından hata almıyorduk. == çünkü depending services.AddSingleton'da uygulamay mahsuz o nesneler 1 defa kalacak bidaha dispose edilmeyecek : dispose edilmediğinden hatayı engelliyordu.  == ama doğru olan çalışma şekli AddScope ile devam etmek
         {
             //await _productWriteRepository.AddRangeAsync(new()
             //{
@@ -61,9 +61,9 @@ namespace ETicaretAPI.API.Controllers
             await _orderWriteRepository.SaveAsync(); //burda biz _orderWriteRepository ine SaveAsync() yapsakda arkada scope olarak aynı dbconteci kullandıklarından hepsine işleyip  _customerWriteRepository içinde ekleme işlemi gerçekleşecektir.
             */
 
-            Order order = await _orderReadRepository.GetByIdAsync("bcb19f78-62fa-405d-a5ba-94c7b09552e0");
-            order.Address = "İstanbul";
-            await _orderWriteRepository.SaveAsync();
+            // Order order = await _orderReadRepository.GetByIdAsync("bcb19f78-62fa-405d-a5ba-94c7b09552e0");
+            return Ok("Merhaba");
+            
         }
 
         [HttpGet("{id}")]
