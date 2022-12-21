@@ -45,7 +45,7 @@ namespace ETicaretAPI.Persistence.Repositories
            T model = await Table.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id)); // buradan silinecek veriyi bulduk id ye göre
             return Remove(model); //id ye göre gelen veriyi sil.
         }
-        public bool Update(T model)
+        public bool Update(T model) //normalde entity framworkde veri çekilir üzerinde ilgili yerlerde değişiklik yapılır ve ilgili veri güncellenir ama bu method = veriyi çekmeden direk ilgili id de şu alanları değiş diye vermek için yazıldı. = entity framwork bize bunuda sunuyor. == yani track edilmeyen veriyi güncelleme. : track mantığı var notlarda.
         {
             EntityEntry<T> entityEntry = Table.Update(model);
             return entityEntry.State == EntityState.Modified;

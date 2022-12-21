@@ -29,10 +29,12 @@ namespace ETicaretAPI.Persistence.Contexts //bu classın amacı sql deki tablola
 
             foreach(var data in datas)
             {
-                _ = data.State switch // if yerine kullandık burada == data.State EntityState.Added ise  = EntityState.Added => data.Entity.CreatedDate = DateTime.UtcNow bu işlemi yap ; data.State  = EntityState.Modified buysada  data.Entity.UpdatedDate = DateTime.UtcNow işlemini yap. gibisinden == if 'in farklı bi yöntemi
+                _ = data.State switch //ilk şartı kontrol eder ilk şartsa ilke girer, ilk şart değilse = ikinci şartı kontrol eder : ikinci şartsa ikinci şarta girer. == ikinci şart'da değilse son şarta girer yani 2. şarta girer yine.
+                // if yerine kullandık burada == data.State EntityState.Added ise  = EntityState.Added => data.Entity.CreatedDate = DateTime.UtcNow bu işlemi yap ; data.State  = EntityState.Modified buysada  data.Entity.UpdatedDate = DateTime.UtcNow işlemini yap. gibisinden == if 'in farklı bi yöntemi
                 {
                     EntityState.Added => data.Entity.CreatedDate = DateTime.UtcNow, //ekleme işlemlerinde CreatedDate verilen datayı ata
-                    EntityState.Modified => data.Entity.UpdatedDate = DateTime.UtcNow // güncelleme işlemlerinde UpdatedDate verilen datayı ata.
+                    EntityState.Modified => data.Entity.UpdatedDate = DateTime.UtcNow, // güncelleme işlemlerinde UpdatedDate verilen datayı ata.
+                    _ => DateTime.UtcNow // silme işleminde silinmiş verinin tarihinde işlem yapamıyacağından bu şartı koyuyoruz.
                 }; //EntityState.Added ; EntityState.Modified kullanımları geriye dönüş sağlıyor biz dönüş ile ilgilenmediğimizden _ = data.State switch dedik geri dönüşü olmasaydı ==  data.State switch demem yeterliydi büyük ihtimal.
             }
 
